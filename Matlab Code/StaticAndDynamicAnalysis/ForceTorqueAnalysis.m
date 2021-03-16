@@ -1,6 +1,6 @@
 %% Static and Dynamic Analysis according to Tsai
 % Jakob Bruckmoser
-% 05.02.2021
+% 18.02.2021
 % statical and dynamical Analysis of the joint torques and Forces
 % - Static (recursive)
 % - Dynamic (recursive Newton Euler)
@@ -8,12 +8,12 @@
 close all; clc; clear;
 
 % general Matlab Functions
-path = 'C:\Users\Jakob\Google Drive\Hochschule München\02 Master\3. Semester\UCF FSI\Pre-Design\4. Iteration\';
+path = 'C:\Users\Jakob\Google Drive\Hochschule München\02 Master\3. Semester\UCF FSI\Pre-Design\5. Iteration\';
 addpath('C:\Users\Jakob\Google Drive\Hochschule München\02 Master\3. Semester\UCF FSI\Pre-Design\MatlabFunctions')
 diary([path,'ForceTorque.txt'])
 load([path,'ArmLengths.mat'])   % [mm] length of the links
 % l = [117 220.3 220.3 71 34];
-armOffsets = [0 75 -75];
+armOffsets = [0 2.5 -75];
 
 % Moments of Inertia from Fusion
 MoI = getMomentsOfInertia(path); % [kg m^2]
@@ -24,7 +24,7 @@ g0 = 9.81;              % [m/s^2] earth gravity
 F = [0;0;-8]*gLun*1.2; 	% [N] external force on end effector * Load Factor of Safety
 N = [0;0;0];            % [Nmm] external torque on end effector
 g = [0;0;-g0];
-m = [0.095 0.25 0.15 0.1 0.04];     % [kg] masses of the links
+m = [0.11 0.24 0.19 0.08 0.05];     % [kg] masses of the links
 mm = [0.17 0.2 0.17 0.17 0] + 0.28;	% [kg] masses of transmissions and motors
 
 r1 = zeros(1,5)+20;     % [mm] inner diameter of links
@@ -45,7 +45,7 @@ d = [l(1);armOffsets(2);armOffsets(3);0;l(4)+l(5)];
 theta = [0;0;0;0;0];    % transformation matrices
 dh = [theta,alpha,a,d];
 T = DHparameters(dh);
-plotCurrentConf(T);
+plotConf(T);
 
 [BaseS,LinkS] = staticAnalysis(T,dh,l,F,N,g,m,mm);
 RneStatic = RNE(m,mm,MoI,dh,g,zeros(1,5),zeros(1,5),T,F,N,l);
@@ -80,7 +80,6 @@ end
 theta = [0;0;0;0;0];    % transformation matrices
 dh = [theta,alpha,a,d];
 T = DHparameters(dh);
-plotCurrentConf(T);
 
 RneDynamic = RNE(m,mm,MoI,dh,g,thetad,thetadd,T,F,N,l);
 for i=1:5

@@ -1,11 +1,11 @@
 %% Calculate minimal required Length of the Arm for 3 given Points
 % Jakob Bruckmoser
-% 05.02.2020
+% 18.02.2020
 % Desc: This Script is for optimizing the total length of the arm for 3
 %       given points. It used a geometrical approoach to find the solutions.
 clear; clc; close all
 
-path = 'C:\Users\Jakob\Google Drive\Hochschule München\02 Master\3. Semester\UCF FSI\Pre-Design\4. Iteration\';
+path = 'C:\Users\Jakob\Google Drive\Hochschule München\02 Master\3. Semester\UCF FSI\Pre-Design\5. Iteration\';
 diary([path,'ArmLengths.txt'])
 
 %% Parameters
@@ -41,8 +41,8 @@ lMin = 70;
 
 % lUB = zeros(5,1)+lMax;
 % lLB = zeros(5,1)+lMin;
-lLB = [117;lMin;lMin;70;33];
-lUB = [118;lMax;lMax;71;34];
+lLB = [117;lMin;lMin;78;40];
+lUB = [118;lMax;lMax;79;41];
 
 %% Linear Boundaries
 A = [];
