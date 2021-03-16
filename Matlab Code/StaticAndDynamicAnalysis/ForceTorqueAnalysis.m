@@ -1,6 +1,6 @@
 %% Static and Dynamic Analysis according to Tsai
 % Jakob Bruckmoser
-% 05.01.2021
+% 05.02.2021
 % statical and dynamical Analysis of the joint torques and Forces
 % - Static (recursive)
 % - Dynamic (recursive Newton Euler)
@@ -8,7 +8,7 @@
 close all; clc; clear;
 
 % general Matlab Functions
-path = 'C:\Users\Jakob\Google Drive\Hochschule München\02 Master\3. Semester\UCF FSI\Pre-Design\3. Iteration\';
+path = 'C:\Users\Jakob\Google Drive\Hochschule München\02 Master\3. Semester\UCF FSI\Pre-Design\4. Iteration\';
 addpath('C:\Users\Jakob\Google Drive\Hochschule München\02 Master\3. Semester\UCF FSI\Pre-Design\MatlabFunctions')
 diary([path,'ForceTorque.txt'])
 load([path,'ArmLengths.mat'])   % [mm] length of the links
@@ -24,8 +24,8 @@ g0 = 9.81;              % [m/s^2] earth gravity
 F = [0;0;-8]*gLun*1.2; 	% [N] external force on end effector * Load Factor of Safety
 N = [0;0;0];            % [Nmm] external torque on end effector
 g = [0;0;-g0];
-m = [0.3 0.2 0.2 0.1 0.1];  % [kg] masses of the links
-mm = zeros(1,5)+0.24;   	% [kg] masses of the motors
+m = [0.095 0.25 0.15 0.1 0.04];     % [kg] masses of the links
+mm = [0.17 0.2 0.17 0.17 0] + 0.28;	% [kg] masses of transmissions and motors
 
 r1 = zeros(1,5)+20;     % [mm] inner diameter of links
 r2 = zeros(1,5)+40;     % [mm] outer diameter of links
@@ -36,7 +36,6 @@ thetadd = zeros(1,5);       % joint rotation accelerations
 tHalf = 10;     % [s] time for half rotation
 tDec = 2;      	% [s] deceleration time
 thetadd(1) = pi/(tHalf*tDec);  % [rad/s^2]
-% thetad(1) = deg2rad(5);
 
 alpha = [90;0;0;90;0];
 a = [armOffsets(1);l(2);l(3);0;0];

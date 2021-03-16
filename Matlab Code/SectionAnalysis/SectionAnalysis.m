@@ -1,6 +1,6 @@
 %% Section Analysis
 % Jakob Bruckmoser
-% 05.01.2021 
+% 05.02.2021 
 % - Analysis of the joint torques and forces
 % - Dimension calculation of the Links
 % - iterative process with weight as changing variable
@@ -18,7 +18,7 @@ clc;
 % general Matlab Functions
 addpath('C:\Users\Jakob\Google Drive\Hochschule München\02 Master\3. Semester\UCF FSI\Pre-Design\MatlabFunctions')
 
-path = 'C:\Users\Jakob\Google Drive\Hochschule München\02 Master\3. Semester\UCF FSI\Pre-Design\3. Iteration\';
+path = 'C:\Users\Jakob\Google Drive\Hochschule München\02 Master\3. Semester\UCF FSI\Pre-Design\4. Iteration\';
 diary([path,'SectionAnalysis.txt'])
 
 load([path,'ArmLengths.mat'])   % [mm] length of the links
@@ -28,25 +28,15 @@ load([path,'ForceTorque.mat'])
 global Re Rm MoS E fmax
 
 Fp = 8*1.2;     % [kg] mass of payload and end effector without motor
-MotorM = 0.24;	% [kg] mass of the motors
+MotorM = 0.28;	% [kg] mass of the motors, Stepperonline - 17HS15-1504S-X1
 
 MoS_norm = 1.2;     % normal minimal Margin of Safety
 MoS_3dprint = 2;    % Margin of Safety for 3D print inaccuracies
 MoS = MoS_norm * MoS_3dprint;
-fmax = 0.5;         % [mm] max displacement at end effector
+fmax = 1;         % [mm] max displacement at end effector
 
 tmin = 2;           % [mm] min thickness of walls
 yOffset = -110-25;
-
-% thetad = zeros(1,5);        % joint rotation velocities
-% thetadd = zeros(1,5);       % joint rotation accelerations
-% 
-% tHalf = [15,0,0,0,0];    % [s] time for half rotation
-% tDec = [2,0,0,0,0];      % [s] deceleration time
-% for i=1:5
-%     thetadd(i) = pi/(tHalf(i)*tDec(i));  % [rad/s^2]
-% end
-
 
 
 %% constant Parameters
@@ -56,12 +46,12 @@ g0 = 9.81;    	% [m/s^2]
 F = [0;0;-Fp]*gLun;	% [N] external force on end effector
 N = [0;0;0];      	% [Nmm] external torque on end effector
 g = [0;0;-g0];
-mm = zeros(1,5)+MotorM;	% [kg] masses of the motors
-m = zeros(5,1)+0.1;     % [kg] init mass guess
+mm = [0.17 0.2 0.17 0.17 0] + 0.28;	% [kg] masses of transmissions and motors
+m = [0.095 0.25 0.18 0.1 0.04];     % [kg] masses of the links
 
 E = 2.3e3;          % [N/mm^2] Young's Modulus, Emodul
-% Re = 26.4;          % [N/mm^2] yield strength Re 
-Re = 3;
+% Re = 26.4;          
+Re = 3;             % [N/mm^2] tested yield strength Re 
 Rm = 35.9;          % [N/mm^2] ultimate tensile strength Rm
 rho = 1.25e-6;      % [kg/mm^3] density of PLA
 
@@ -91,155 +81,53 @@ plotCurrentConf(T)
 plotRover(yOffset);
 
 
-%% I-Profile
-% UB = [60;60;50;50]; % max B,H,tb,th
-% LB = [5;5;tmin;tmin]; % min B,H,tb,th
-% x0 = [10;10;2;2];
-% 
-% diff = 1; % stopping criteria
-% while abs(diff)>1e-4
-% 
-%     [Base,Link] = staticAnalysis(T,dh,l,F,N,g,m,mm);
-% %     [Base,Link] = RNE(m,mm,l,r1,r2,dh,LinkS,g,thetad,thetadd,T,F,N);
-%     Prog = MomentForceProgression(Base,g0,m,mm,l,0);
-%     mOld = m;
-% 
-%     for i=1:5
-%         k=1;
-%         for j=1:length(Prog(1).M)
-%             
-%             Mb1 = Prog(i).M(j); 
-%             Mb2 = Mb1 * ForceTorque.Factors(i).fb2;
-%             Mt = Mb1 * ForceTorque.Factors(i).ft;            
-%             
-%             Truss(i).FpMax=Base(i).F(3);
-%             Truss(i).Mb1(j) = Mb1;
-%             Truss(i).Mb2(j) = Mb2;
-%             Truss(i).Mt(j) = Mt;
-% 
-%             sObj = hObj([]);    % exit values of fmincon
-%             fyObj = hObj([]);
-%             fzObj = hObj([]);     
-%             buckObj = hObj([]);
-% 
-%             nonlconFun = @(x)nonlconI(x,Truss(i).FpMax,Mb1,Mb2,Mt,l(i),sObj,fyObj,fzObj,buckObj);
-%             [x,Truss(i).area(k),flag] = fmincon(@goalFunI,x0,Acon,Bcon,Aeq,Beq,LB,UB,nonlconFun,options);
-%             if flag>0 
-%                 Truss(i).m = Truss(i).area(1)*l(i)*rho;
-%                 Truss(i).B(k) = x(1);
-%                 Truss(i).H(k) = x(2);
-%                 Truss(i).tb(k) = x(3);
-%                 Truss(i).th(k) = x(4);
-%                 Truss(i).b(k) = Truss(i).B(k)-Truss(i).tb(k);
-%                 Truss(i).h(k) = Truss(i).H(k)-2*Truss(i).th(k);
-%                 Truss(i).sigma(k) = sObj.o;
-%                 Truss(i).fy(k) = fyObj.o;
-%                 Truss(i).fz(k) = fzObj.o;
-%                 Truss(i).buckle(k) = buckObj.o;
-%             else
-%                 fprintf('Fmincon Error at Link %i, Crosssection %i\n',i,k); 
-%                 m(i) = mOld(i);
-%             end
-%             
-%             k=k+1;
-%         end
-%         m(i)=Truss(i).m;
-%     end
-%     diff = m-mOld;
-% end
-% 
-% fprintf('~~~~~~~I-Profile~~~~~~\n')
-% dispResults(Truss,1,0,1)
-% 
-figure('name','Profile Sections','Position',[-1339 381 590 511]);
-offset = 5;
-% xmax = max(Truss(2).B)/2;
-% ymax = max(Truss(2).H)/2;
-% for i=2:3
-%     subplot(2,2,i-1)
-%     axis equal
-%     Bp = Truss(i).B(1);
-%     Hp = Truss(i).H(1);
-%     bp = Truss(i).b(1);
-%     hp = Truss(i).h(1);
-%     xlim([-xmax-offset xmax+offset])
-%     ylim([-ymax-offset ymax+offset])
-%     rectangle('Position',[-(Bp-bp)/2 -hp/2 Bp-bp hp]);
-%     rectangle('Position',[-Bp/2 -Hp/2 Bp (Hp-hp)/2]);
-%     rectangle('Position',[-Bp/2 hp/2 Bp (Hp-hp)/2]);
-%     
-%     Bp = Truss(i).B(end);
-%     Hp = Truss(i).H(end);
-%     bp = Truss(i).b(end);
-%     hp = Truss(i).h(end);
-%     xlim([-xmax-offset xmax+offset])
-%     ylim([-ymax-offset ymax+offset])
-%     rectangle('Position',[-(Bp-bp)/2 -hp/2 Bp-bp hp],'LineStyle',':');
-%     rectangle('Position',[-Bp/2 -Hp/2 Bp (Hp-hp)/2],'LineStyle',':');
-%     rectangle('Position',[-Bp/2 hp/2 Bp (Hp-hp)/2],'LineStyle',':');
-%     
-%     title(['Link ',num2str(i)])
-%     if i==1
-%         xlabel('B [mm]')
-%         ylabel('H [mm]')
-%     end
-% end
-
 %% Tube Profile
 
 % boundaries
-UB = [30;20];       % max radius and max thickness
+UB = [38;20];       % max radius and max thickness
 LB = [2.1;tmin];	% min radius and min thickness
 x0 = [10;1];
 
-diff = 1; % stopping criteria
-while abs(diff)>1e-4
+[Base,Link] = staticAnalysis(T,dh,l,F,N,g,m,mm);
+Prog = MomentForceProgression(Base,g0,m,mm,l,0);
 
-    [Base,Link] = staticAnalysis(T,dh,l,F,N,g,m,mm);
-%     [Base,Link] = RNE(m,mm,l,r1,r2,dh,LinkS,g,thetad,thetadd,T,F,N);
-    Prog = MomentForceProgression(Base,g0,m,mm,l,0);
-    mOld = m;
+for i=1:5
+    k=1;
+    for j=1:length(Prog(1).M)
 
-    for i=1:5
-        k=1;
-        for j=1:length(Prog(1).M)
-            
-            Mb1 = Prog(i).M(j); 
-            Mb2 = Mb1 * ForceTorque.Factors(i).fb2;
-            Mt = Mb1 * ForceTorque.Factors(i).ft;            
-            
-            Tube(i).FpMax=Base(i).F(3);
-            Tube(i).Mb1(j) = Mb1;
-            Tube(i).Mb2(j) = Mb2;
-            Tube(i).Mt(j) = Mt;
+        Mb1 = Prog(i).M(j); 
+        Mb2 = Mb1 * ForceTorque.Factors(i).fb2;
+        Mt = Mb1 * ForceTorque.Factors(i).ft;            
 
-            sObj = hObj([]);    % exit values of fmincon
-            fyObj = hObj([]);
-            buckObj = hObj([]);
+        Tube(i).FpMax=Base(i).F(3);
+        Tube(i).Mb1(j) = Mb1;
+        Tube(i).Mb2(j) = Mb2;
+        Tube(i).Mt(j) = Mt;
 
-            nonlconFun = @(x)nonlconCirc(x,Tube(i).FpMax,Mb1,Mb2,Mt,l(i),sObj,fyObj,buckObj);
-            [x,Tube(i).area(k),flag] = fmincon(@goalFunCirc,x0,Acon,Bcon,Aeq,Beq,LB,UB,nonlconFun,options);
-            if flag>0                
-                Tube(i).m = Tube(i).area(1)*l(i)*rho;
-                Tube(i).R(k) = x(1);
-                Tube(i).t(k) = x(2);
-                Tube(i).sigma(k) = sObj.o;
-                Tube(i).fy(k) = fyObj.o;
-                Tube(i).buckle(k) = buckObj.o;
-            else
-                fprintf('Fmincon Error at Link %i, Crosssection %i\n',i,k); 
-                m(i) = mOld(i);
-            end
-        
-            k=k+1;
+        sObj = hObj([]);    % exit values of fmincon
+        fyObj = hObj([]);
+        buckObj = hObj([]);
+
+        nonlconFun = @(x)nonlconCirc(x,Tube(i).FpMax,Mb1,Mb2,Mt,l(i),sObj,fyObj,buckObj);
+        [x,Tube(i).area(k),flag] = fmincon(@goalFunCirc,x0,Acon,Bcon,Aeq,Beq,LB,UB,nonlconFun,options);
+        if flag>0           
+            Tube(i).m = m(i);
+            Tube(i).R(k) = x(1);
+            Tube(i).t(k) = x(2);
+            Tube(i).sigma(k) = sObj.o;
+            Tube(i).fy(k) = fyObj.o;
+            Tube(i).buckle(k) = buckObj.o;
+        else
+            fprintf('Fmincon Error at Link %i, Crosssection %i\n',i,k); 
         end
-        m(i) = Tube(i).m;
-    end
 
-    diff = m-mOld;
+        k=k+1;
+    end
 end
 
 fprintf('\n~~~~~Tube-Profile~~~~~\n')
+figure('name','Profile Sections','Position',[-1339 381 590 511]);
+offset = 5;
 dispResults(Tube,2,0,1)
 
 xmax = max(Tube(2).R);
