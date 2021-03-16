@@ -1,0 +1,34 @@
+E:\Documents\04_Projekte\19_Github\Master_Thesis\Visual Studio Code\bin\Debug\net5.0-windows\GUI CSharp.exe
+E:\Documents\04_Projekte\19_Github\Master_Thesis\Visual Studio Code\bin\Debug\net5.0-windows\GUI CSharp.deps.json
+E:\Documents\04_Projekte\19_Github\Master_Thesis\Visual Studio Code\bin\Debug\net5.0-windows\GUI CSharp.runtimeconfig.json
+E:\Documents\04_Projekte\19_Github\Master_Thesis\Visual Studio Code\bin\Debug\net5.0-windows\GUI CSharp.runtimeconfig.dev.json
+E:\Documents\04_Projekte\19_Github\Master_Thesis\Visual Studio Code\bin\Debug\net5.0-windows\GUI CSharp.dll
+E:\Documents\04_Projekte\19_Github\Master_Thesis\Visual Studio Code\bin\Debug\net5.0-windows\ref\GUI CSharp.dll
+E:\Documents\04_Projekte\19_Github\Master_Thesis\Visual Studio Code\bin\Debug\net5.0-windows\GUI CSharp.pdb
+E:\Documents\04_Projekte\19_Github\Master_Thesis\Visual Studio Code\bin\Debug\net5.0-windows\Microsoft.Win32.Registry.dll
+E:\Documents\04_Projekte\19_Github\Master_Thesis\Visual Studio Code\bin\Debug\net5.0-windows\System.IO.Ports.dll
+E:\Documents\04_Projekte\19_Github\Master_Thesis\Visual Studio Code\bin\Debug\net5.0-windows\System.Security.AccessControl.dll
+E:\Documents\04_Projekte\19_Github\Master_Thesis\Visual Studio Code\bin\Debug\net5.0-windows\System.Security.Principal.Windows.dll
+E:\Documents\04_Projekte\19_Github\Master_Thesis\Visual Studio Code\bin\Debug\net5.0-windows\runtimes\win\lib\netstandard2.0\Microsoft.Win32.Registry.dll
+E:\Documents\04_Projekte\19_Github\Master_Thesis\Visual Studio Code\bin\Debug\net5.0-windows\runtimes\linux-arm\native\libSystem.IO.Ports.Native.so
+E:\Documents\04_Projekte\19_Github\Master_Thesis\Visual Studio Code\bin\Debug\net5.0-windows\runtimes\linux-arm64\native\libSystem.IO.Ports.Native.so
+E:\Documents\04_Projekte\19_Github\Master_Thesis\Visual Studio Code\bin\Debug\net5.0-windows\runtimes\linux-x64\native\libSystem.IO.Ports.Native.so
+E:\Documents\04_Projekte\19_Github\Master_Thesis\Visual Studio Code\bin\Debug\net5.0-windows\runtimes\osx-x64\native\libSystem.IO.Ports.Native.dylib
+E:\Documents\04_Projekte\19_Github\Master_Thesis\Visual Studio Code\bin\Debug\net5.0-windows\runtimes\linux\lib\netstandard2.0\System.IO.Ports.dll
+E:\Documents\04_Projekte\19_Github\Master_Thesis\Visual Studio Code\bin\Debug\net5.0-windows\runtimes\osx\lib\netstandard2.0\System.IO.Ports.dll
+E:\Documents\04_Projekte\19_Github\Master_Thesis\Visual Studio Code\bin\Debug\net5.0-windows\runtimes\win\lib\netstandard2.0\System.IO.Ports.dll
+E:\Documents\04_Projekte\19_Github\Master_Thesis\Visual Studio Code\bin\Debug\net5.0-windows\runtimes\win\lib\netstandard2.0\System.Security.AccessControl.dll
+E:\Documents\04_Projekte\19_Github\Master_Thesis\Visual Studio Code\bin\Debug\net5.0-windows\runtimes\unix\lib\netcoreapp2.1\System.Security.Principal.Windows.dll
+E:\Documents\04_Projekte\19_Github\Master_Thesis\Visual Studio Code\bin\Debug\net5.0-windows\runtimes\win\lib\netcoreapp2.1\System.Security.Principal.Windows.dll
+E:\Documents\04_Projekte\19_Github\Master_Thesis\Visual Studio Code\obj\Debug\net5.0-windows\GUI CSharp.csprojAssemblyReference.cache
+E:\Documents\04_Projekte\19_Github\Master_Thesis\Visual Studio Code\obj\Debug\net5.0-windows\GUI_CSharp.Motor_Control_GUI.resources
+E:\Documents\04_Projekte\19_Github\Master_Thesis\Visual Studio Code\obj\Debug\net5.0-windows\GUI CSharp.csproj.GenerateResource.cache
+E:\Documents\04_Projekte\19_Github\Master_Thesis\Visual Studio Code\obj\Debug\net5.0-windows\GUI CSharp.GeneratedMSBuildEditorConfig.editorconfig
+E:\Documents\04_Projekte\19_Github\Master_Thesis\Visual Studio Code\obj\Debug\net5.0-windows\GUI CSharp.AssemblyInfoInputs.cache
+E:\Documents\04_Projekte\19_Github\Master_Thesis\Visual Studio Code\obj\Debug\net5.0-windows\GUI CSharp.AssemblyInfo.cs
+E:\Documents\04_Projekte\19_Github\Master_Thesis\Visual Studio Code\obj\Debug\net5.0-windows\GUI CSharp.csproj.CoreCompileInputs.cache
+E:\Documents\04_Projekte\19_Github\Master_Thesis\Visual Studio Code\obj\Debug\net5.0-windows\GUI CSharp.csproj.CopyComplete
+E:\Documents\04_Projekte\19_Github\Master_Thesis\Visual Studio Code\obj\Debug\net5.0-windows\GUI CSharp.dll
+E:\Documents\04_Projekte\19_Github\Master_Thesis\Visual Studio Code\obj\Debug\net5.0-windows\ref\GUI CSharp.dll
+E:\Documents\04_Projekte\19_Github\Master_Thesis\Visual Studio Code\obj\Debug\net5.0-windows\GUI CSharp.pdb
+E:\Documents\04_Projekte\19_Github\Master_Thesis\Visual Studio Code\obj\Debug\net5.0-windows\GUI CSharp.genruntimeconfig.cache

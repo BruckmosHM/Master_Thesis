@@ -12,16 +12,24 @@ double slwFkt = 0.77;
 
 // Create the motor shield object
 // Adafruit_MotorShield AFMS = Adafruit_MotorShield();
+Adafruit_MotorShield topShield(0x60);
 Adafruit_MotorShield bottomShield(0x61);
 
-
-// Connect a stepper motors
+// Connect stepper motors
+Adafruit_StepperMotor *joint1 = topShield.getStepper(200, 2);
 Adafruit_StepperMotor *joint2 = bottomShield.getStepper(200, 1);
 Adafruit_StepperMotor *joint3 = bottomShield.getStepper(200, 2);
+Adafruit_StepperMotor *joint4 = topShield.getStepper(200, 1);
 
 // ---------------- //
 // Stepperfunctions //
 // ---------------- //
+void clockwiseJoint1() {
+  joint1->onestep(FORWARD, steptype);
+}
+void anticlockwiseJoint1() {
+  joint1->onestep(BACKWARD, steptype);
+}
 void clockwiseJoint2() {
   joint2->onestep(FORWARD, steptype);
 }
@@ -34,25 +42,42 @@ void clockwiseJoint3() {
 void anticlockwiseJoint3() {
   joint3->onestep(BACKWARD, steptype);
 }
+void clockwiseJoint4() {
+  joint4->onestep(FORWARD, steptype);
+}
+void anticlockwiseJoint4() {
+  joint4->onestep(BACKWARD, steptype);
+}
 
 // ------------------------------------------ //
 // wrap the stepper in an AccelStepper object //
 // ------------------------------------------ //
+AccelStepper stepperJoint1(clockwiseJoint1, anticlockwiseJoint1);
 AccelStepper stepperJoint2(clockwiseJoint2, anticlockwiseJoint2);
 AccelStepper stepperJoint3(clockwiseJoint3, anticlockwiseJoint3);
+AccelStepper stepperJoint4(clockwiseJoint4, anticlockwiseJoint4);
 
 
 // ----- //
 // Setup //
 // ----- //
 void setup() {
-  Serial.begin(9600);   //set up Serial library at 9600 bps
-  bottomShield.begin(); //create with the default frequency 1.6KHz
+  //set up Serial library at 9600 bps
+  Serial.begin(9600);   
 
+  //create with the default frequency 1.6KHz
+  topShield.begin();
+  bottomShield.begin(); 
+
+  // initialize the speed and acceleration of the motors
+  stepperJoint1.setMaxSpeed(newSpeed * slwFkt);
+  stepperJoint1.setAcceleration(newAccel * slwFkt);
   stepperJoint2.setMaxSpeed(newSpeed * 43 / 30);
   stepperJoint2.setAcceleration(newAccel * 43 / 30);
   stepperJoint3.setMaxSpeed(newSpeed * slwFkt);
   stepperJoint3.setAcceleration(newAccel * slwFkt);
+  stepperJoint4.setMaxSpeed(newSpeed * slwFkt);
+  stepperJoint4.setAcceleration(newAccel * slwFkt);
 }
 
 // ---- //
@@ -60,23 +85,29 @@ void setup() {
 // ---- //
 void loop() {
   // run the steppers until target reached, then check and wait for new commands
-  if ((stepperJoint2.distanceToGo() == 0) && (stepperJoint3.distanceToGo() == 0))
+  if ((stepperJoint1.distanceToGo() == 0) &&(stepperJoint2.distanceToGo() == 0) && (stepperJoint3.distanceToGo() == 0) && (stepperJoint4.distanceToGo() == 0))
   {
     // send the current postion to the GUI once when target reached
     if (stateChanged) {      
-      Serial.print("Echo: Positions 0 ");
+      Serial.print("Echo: Positions ");
+      Serial.print(stepperJoint1.currentPosition());
+      Serial.print(" ");
       Serial.print(stepperJoint2.currentPosition());
       Serial.print(" ");
       Serial.print(stepperJoint3.currentPosition());
-      Serial.println(" 0 0");
+      Serial.print(" ");
+      Serial.print(stepperJoint4.currentPosition());
+      Serial.println(" 0");
       stateChanged = false;
     }
 
     // Check and wait for new commands
     readSerial();    
   } else {
+    stepperJoint1.run();
     stepperJoint2.run();
     stepperJoint3.run();
+    stepperJoint4.run();
   }
 }
 
@@ -159,15 +190,19 @@ void changeSettings(String parameter[]) {
     case 'S':
       // Change the max speed of the motors
       newSpeed = p2;
+      stepperJoint1.setMaxSpeed(newSpeed * slwFkt);
       stepperJoint2.setMaxSpeed(newSpeed * 43 / 30);
       stepperJoint3.setMaxSpeed(newSpeed * slwFkt);
+      stepperJoint4.setMaxSpeed(newSpeed * slwFkt);
       break;
 
     case 'A':
       // Change the max acceleration of the motor
       newAccel = p2;
+      stepperJoint1.setAcceleration(newAccel * slwFkt);
       stepperJoint2.setAcceleration(newAccel * 43 / 30);
       stepperJoint3.setAcceleration(newAccel * slwFkt);
+      stepperJoint4.setAcceleration(newAccel * slwFkt);
       break;
 
     case 'T':
@@ -177,18 +212,26 @@ void changeSettings(String parameter[]) {
 
     case 'R':
       // release all motors
+      joint1->release();
       joint2->release();
       joint3->release();
+      joint4->release();
 
     case 'E':
       // reset all motor positions
+      stepperJoint1.setCurrentPosition(0);
       stepperJoint2.setCurrentPosition(0);
       stepperJoint3.setCurrentPosition(0);
-      Serial.print("Echo: Positions 0 ");
+      stepperJoint4.setCurrentPosition(0);
+      Serial.print("Echo: Positions ");
+      Serial.print(stepperJoint1.currentPosition());
+      Serial.print(" ");
       Serial.print(stepperJoint2.currentPosition());
       Serial.print(" ");
       Serial.print(stepperJoint3.currentPosition());
-      Serial.println(" 0 0");
+      Serial.print(" ");
+      Serial.print(stepperJoint4.currentPosition());
+      Serial.println(" 0");
       break;
 
     default:
@@ -218,9 +261,11 @@ void moveArm(String parameter[]) {
     int p5 = parameter[5].toInt();
     Serial.println("Echo: Move to " + parameter[1] + " " + parameter[2] + " " + parameter[3] + " " + parameter[4] + " " + parameter[5]);
     
-    //declare new final positions of the joints
+    // declare new relative target positions of the joints
+    stepperJoint1.move(p1);
     stepperJoint2.move(p2);
     stepperJoint3.move(p3);
+    stepperJoint4.move(p4);
     stateChanged = true;
   } else {
     Serial.println("Echo: wrong amount of input arguments or nonvalid inputs");
