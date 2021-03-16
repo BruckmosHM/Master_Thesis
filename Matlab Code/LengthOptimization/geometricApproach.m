@@ -1,11 +1,11 @@
 %% Calculate minimal required Length of the Arm for 3 given Points
 % Jakob Bruckmoser
-% 16.11.2020
+% 07.01.2020
 % Desc: This Script is for optimizing the total length of the arm for 3
 %       given points. It used a geometrical approoach to find the solutions.
 clear; clc; close all
 
-path = 'C:\Users\Jakob\Google Drive\Hochschule München\02 Master\3. Semester\UCF FSI\Pre-Design\2. Iteration\';
+path = 'C:\Users\Jakob\Google Drive\Hochschule München\02 Master\3. Semester\UCF FSI\Pre-Design\3. Iteration\';
 diary([path,'ArmLengths.txt'])
 
 %% Parameters
@@ -31,7 +31,7 @@ P1 = [xOffset yMax zOffset];
 P2 = [xOffset yMin zOffset];
 
 % Grabbing
-P3 = [-330 -yOffset 20];
+P3 = [-330 -yOffset (-34+51)]; %34 height of platform, 51 thickness of Paver
 
 %% Start and Boundary Conditions
 
@@ -39,8 +39,10 @@ P3 = [-330 -yOffset 20];
 lMax = 300;
 lMin = 70;
 
-lUB = zeros(5,1)+lMax;
-lLB = zeros(5,1)+lMin;
+% lUB = zeros(5,1)+lMax;
+% lLB = zeros(5,1)+lMin;
+lLB = [117;lMin;lMin;70;33];
+lUB = [118;lMax;lMax;71;34];
 
 %% Linear Boundaries
 A = [];
@@ -65,7 +67,7 @@ alpha0 = zeros(6,1);
 % Link Boundaries
 % lUB = zeros(5,1)+lMax;
 % lLB = zeros(5,1)+lMin;
-l0 = [50;300;300;50;50];
+l0 = [117;300;300;71;34];
 
 % All Boundaries
 LB = [lLB;alphaLB];
@@ -94,7 +96,7 @@ alphaLB = zeros(3,1)+deg2rad(alphaMin);
 alpha0 = zeros(3,1);
 
 % Link Boundaries
-l0 = [50;200;200;50;50];
+l0 = [117;200;200;71;34];
 
 % All Boundaries
 LB = [lLB;alphaLB];
@@ -156,8 +158,8 @@ else
     L5 = x1(5);
     
     % Joint Limits
-    alphaMax = 180;
-    alphaMin = -180;
+    alphaMax = 175;
+    alphaMin = -175;
 
     % Joint Boundaries
     UB = zeros(6,1)+deg2rad(alphaMax);

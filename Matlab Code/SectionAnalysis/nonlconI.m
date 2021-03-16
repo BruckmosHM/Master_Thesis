@@ -2,7 +2,7 @@ function [c,ceq] = nonlconI(x,FpMax,My,Mz,Mt,l,sigmaOut,fyOut,fzOut,BuckleOut)
 %NONLCON Summary of this function goes here
 %   Detailed explanation goes here
 
-global Re Rm MoS E fmax
+global Re MoS E fmax
 ceq = [];
 
 %% variables

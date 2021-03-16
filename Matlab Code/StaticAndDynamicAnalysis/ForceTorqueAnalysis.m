@@ -1,6 +1,6 @@
 %% Static and Dynamic Analysis according to Tsai
 % Jakob Bruckmoser
-% 23.11.2020 
+% 05.01.2021
 % statical and dynamical Analysis of the joint torques and Forces
 % - Static (recursive)
 % - Dynamic (recursive Newton Euler)
@@ -8,11 +8,12 @@
 close all; clc; clear;
 
 % general Matlab Functions
-path = 'C:\Users\Jakob\Google Drive\Hochschule München\02 Master\3. Semester\UCF FSI\Pre-Design\2. Iteration\';
+path = 'C:\Users\Jakob\Google Drive\Hochschule München\02 Master\3. Semester\UCF FSI\Pre-Design\3. Iteration\';
 addpath('C:\Users\Jakob\Google Drive\Hochschule München\02 Master\3. Semester\UCF FSI\Pre-Design\MatlabFunctions')
 diary([path,'ForceTorque.txt'])
 load([path,'ArmLengths.mat'])   % [mm] length of the links
-% l = [85 178.1 178.2 108 108];
+% l = [117 220.3 220.3 71 34];
+armOffsets = [0 75 -75];
 
 % Moments of Inertia from Fusion
 MoI = getMomentsOfInertia(path); % [kg m^2]
@@ -38,18 +39,21 @@ thetadd(1) = pi/(tHalf*tDec);  % [rad/s^2]
 % thetad(1) = deg2rad(5);
 
 alpha = [90;0;0;90;0];
-a = [0;l(2);l(3);0;0];
-d = [l(1);0;0;0;l(4)+l(5)];
+a = [armOffsets(1);l(2);l(3);0;0];
+d = [l(1);armOffsets(2);armOffsets(3);0;l(4)+l(5)];
 
 %% Static analysis in worst case
-theta = [0;0;0;90;0];    % transformation matrices
+theta = [0;0;0;0;0];    % transformation matrices
 dh = [theta,alpha,a,d];
 T = DHparameters(dh);
 plotCurrentConf(T);
 
 [BaseS,LinkS] = staticAnalysis(T,dh,l,F,N,g,m,mm);
 RneStatic = RNE(m,mm,MoI,dh,g,zeros(1,5),zeros(1,5),T,F,N,l);
-for i=1:5
+
+Diff(1,1) = abs(sum(round(LinkS(1).F,3))) - abs(sum(round(RneStatic(1).fI,3)));
+Diff(1,2) = sum(abs(round(LinkS(1).N,3))) - sum(abs(round(RneStatic(1).ni,3)));
+for i=2:5
     Diff(i,1) = abs(sum(round(LinkS(i).F,3))) - abs(sum(round(RneStatic(i).fI,3)));
     Diff(i,2) = abs(sum(round(LinkS(i).N,3))) - abs(sum(round(RneStatic(i).ni,3)));
 end  

@@ -19,7 +19,7 @@ if Link==0
                 k,Res(k).Mb1(pos),Res(k).area(pos),Res(k).m,Res(k).B(pos),Res(k).H(pos),Res(k).tb(pos),Res(k).th(pos))
         end
     else % tube
-        fprintf('\tLink \tM \t\tarea \tmass \tR \t\tt\n')
+        fprintf('\tLink \tM \t\t\tarea \tmass \tR \t\tt\n')
         for k=1:length(Res)
             fprintf('\t%i \t\t%0.1f \t%0.1f \t%0.3f \t%0.1f \t%0.1f\n',...
                 k,Res(k).Mb1(pos),Res(k).area(pos),Res(k).m,Res(k).R(pos),Res(k).t(pos))
@@ -32,7 +32,7 @@ else
         fprintf('\t%i \t\t%0.1f \t%0.1f \t%0.3f \t%0.1f \t%0.1f \t%0.1f \t%0.1f\n',...
             k,Res(k).Mb1(pos),Res(k).area(pos),Res(k).m,Res(k).B(pos),Res(k).H(pos),Res(k).tb(pos),Res(k).th(pos))
     else % tube
-        fprintf('\tLink \tM \t\tarea \tmass \tR \t\tt\n')
+        fprintf('\tLink \tM \t\t\tarea \tmass \tR \t\tt\n')
         k=Link;
         fprintf('\t%i \t\t%0.1f \t%0.1f \t%0.3f \t%0.1f \t%0.1f\n',...
             k,Res(k).Mb1(pos),Res(k).area(pos),Res(k).m,Res(k).R(pos),Res(k).t(pos))

@@ -1,6 +1,6 @@
 %% Section Analysis
 % Jakob Bruckmoser
-% 23.11.2020 
+% 05.01.2021 
 % - Analysis of the joint torques and forces
 % - Dimension calculation of the Links
 % - iterative process with weight as changing variable
@@ -18,7 +18,7 @@ clc;
 % general Matlab Functions
 addpath('C:\Users\Jakob\Google Drive\Hochschule München\02 Master\3. Semester\UCF FSI\Pre-Design\MatlabFunctions')
 
-path = 'C:\Users\Jakob\Google Drive\Hochschule München\02 Master\3. Semester\UCF FSI\Pre-Design\2. Iteration\';
+path = 'C:\Users\Jakob\Google Drive\Hochschule München\02 Master\3. Semester\UCF FSI\Pre-Design\3. Iteration\';
 diary([path,'SectionAnalysis.txt'])
 
 load([path,'ArmLengths.mat'])   % [mm] length of the links
@@ -60,9 +60,12 @@ mm = zeros(1,5)+MotorM;	% [kg] masses of the motors
 m = zeros(5,1)+0.1;     % [kg] init mass guess
 
 E = 2.3e3;          % [N/mm^2] Young's Modulus, Emodul
-Re = 26.4;          % [N/mm^2] yield strength Re 
+% Re = 26.4;          % [N/mm^2] yield strength Re 
+Re = 3;
 Rm = 35.9;          % [N/mm^2] ultimate tensile strength Rm
 rho = 1.25e-6;      % [kg/mm^3] density of PLA
+
+ew = 0.48;          % [mm] Extrusion width of 3D printer / Slicing software
 
 MoI = getMomentsOfInertia(path);
 
@@ -89,99 +92,98 @@ plotRover(yOffset);
 
 
 %% I-Profile
-% UB = [50;60;50;50]; % max B,H,tb,th
-UB = [60;60;50;50];
-LB = [5;5;tmin;tmin]; % min B,H,tb,th
-x0 = [10;10;2;2];
-
-diff = 1; % stopping criteria
-while abs(diff)>1e-4
-
-    [Base,Link] = staticAnalysis(T,dh,l,F,N,g,m,mm);
-%     [Base,Link] = RNE(m,mm,l,r1,r2,dh,LinkS,g,thetad,thetadd,T,F,N);
-    Prog = MomentForceProgression(Base,g0,m,mm,l,0);
-    mOld = m;
-
-    for i=1:5
-        k=1;
-        for j=1:length(Prog(1).M)
-            
-            Mb1 = Prog(i).M(j); 
-            Mb2 = Mb1 * ForceTorque.Factors(i).fb2;
-            Mt = Mb1 * ForceTorque.Factors(i).ft;            
-            
-            Truss(i).FpMax=Base(i).F(3);
-            Truss(i).Mb1(j) = Mb1;
-            Truss(i).Mb2(j) = Mb2;
-            Truss(i).Mt(j) = Mt;
-
-            sObj = hObj([]);    % exit values of fmincon
-            fyObj = hObj([]);
-            fzObj = hObj([]);     
-            buckObj = hObj([]);
-
-            nonlconFun = @(x)nonlconI(x,Truss(i).FpMax,Mb1,Mb2,Mt,l(i),sObj,fyObj,fzObj,buckObj);
-            [x,Truss(i).area(k),flag] = fmincon(@goalFunI,x0,Acon,Bcon,Aeq,Beq,LB,UB,nonlconFun,options);
-            if flag>0 
-                Truss(i).m = Truss(i).area(1)*l(i)*rho;
-                Truss(i).B(k) = x(1);
-                Truss(i).H(k) = x(2);
-                Truss(i).tb(k) = x(3);
-                Truss(i).th(k) = x(4);
-                Truss(i).b(k) = Truss(i).B(k)-Truss(i).tb(k);
-                Truss(i).h(k) = Truss(i).H(k)-2*Truss(i).th(k);
-                Truss(i).sigma(k) = sObj.o;
-                Truss(i).fy(k) = fyObj.o;
-                Truss(i).fz(k) = fzObj.o;
-                Truss(i).buckle(k) = buckObj.o;
-            else
-                fprintf('Fmincon Error at Link %i, Crosssection %i\n',i,k); 
-                m(i) = mOld(i);
-            end
-            
-            k=k+1;
-        end
-        m(i)=Truss(i).m;
-    end
-    diff = m-mOld;
-end
-
-fprintf('~~~~~~~I-Profile~~~~~~\n')
-dispResults(Truss,1,0,1)
-
+% UB = [60;60;50;50]; % max B,H,tb,th
+% LB = [5;5;tmin;tmin]; % min B,H,tb,th
+% x0 = [10;10;2;2];
+% 
+% diff = 1; % stopping criteria
+% while abs(diff)>1e-4
+% 
+%     [Base,Link] = staticAnalysis(T,dh,l,F,N,g,m,mm);
+% %     [Base,Link] = RNE(m,mm,l,r1,r2,dh,LinkS,g,thetad,thetadd,T,F,N);
+%     Prog = MomentForceProgression(Base,g0,m,mm,l,0);
+%     mOld = m;
+% 
+%     for i=1:5
+%         k=1;
+%         for j=1:length(Prog(1).M)
+%             
+%             Mb1 = Prog(i).M(j); 
+%             Mb2 = Mb1 * ForceTorque.Factors(i).fb2;
+%             Mt = Mb1 * ForceTorque.Factors(i).ft;            
+%             
+%             Truss(i).FpMax=Base(i).F(3);
+%             Truss(i).Mb1(j) = Mb1;
+%             Truss(i).Mb2(j) = Mb2;
+%             Truss(i).Mt(j) = Mt;
+% 
+%             sObj = hObj([]);    % exit values of fmincon
+%             fyObj = hObj([]);
+%             fzObj = hObj([]);     
+%             buckObj = hObj([]);
+% 
+%             nonlconFun = @(x)nonlconI(x,Truss(i).FpMax,Mb1,Mb2,Mt,l(i),sObj,fyObj,fzObj,buckObj);
+%             [x,Truss(i).area(k),flag] = fmincon(@goalFunI,x0,Acon,Bcon,Aeq,Beq,LB,UB,nonlconFun,options);
+%             if flag>0 
+%                 Truss(i).m = Truss(i).area(1)*l(i)*rho;
+%                 Truss(i).B(k) = x(1);
+%                 Truss(i).H(k) = x(2);
+%                 Truss(i).tb(k) = x(3);
+%                 Truss(i).th(k) = x(4);
+%                 Truss(i).b(k) = Truss(i).B(k)-Truss(i).tb(k);
+%                 Truss(i).h(k) = Truss(i).H(k)-2*Truss(i).th(k);
+%                 Truss(i).sigma(k) = sObj.o;
+%                 Truss(i).fy(k) = fyObj.o;
+%                 Truss(i).fz(k) = fzObj.o;
+%                 Truss(i).buckle(k) = buckObj.o;
+%             else
+%                 fprintf('Fmincon Error at Link %i, Crosssection %i\n',i,k); 
+%                 m(i) = mOld(i);
+%             end
+%             
+%             k=k+1;
+%         end
+%         m(i)=Truss(i).m;
+%     end
+%     diff = m-mOld;
+% end
+% 
+% fprintf('~~~~~~~I-Profile~~~~~~\n')
+% dispResults(Truss,1,0,1)
+% 
 figure('name','Profile Sections','Position',[-1339 381 590 511]);
 offset = 5;
-xmax = max(Truss(2).B)/2;
-ymax = max(Truss(2).H)/2;
-for i=2:3
-    subplot(2,2,i-1)
-    axis equal
-    Bp = Truss(i).B(1);
-    Hp = Truss(i).H(1);
-    bp = Truss(i).b(1);
-    hp = Truss(i).h(1);
-    xlim([-xmax-offset xmax+offset])
-    ylim([-ymax-offset ymax+offset])
-    rectangle('Position',[-(Bp-bp)/2 -hp/2 Bp-bp hp]);
-    rectangle('Position',[-Bp/2 -Hp/2 Bp (Hp-hp)/2]);
-    rectangle('Position',[-Bp/2 hp/2 Bp (Hp-hp)/2]);
-    
-    Bp = Truss(i).B(end);
-    Hp = Truss(i).H(end);
-    bp = Truss(i).b(end);
-    hp = Truss(i).h(end);
-    xlim([-xmax-offset xmax+offset])
-    ylim([-ymax-offset ymax+offset])
-    rectangle('Position',[-(Bp-bp)/2 -hp/2 Bp-bp hp],'LineStyle',':');
-    rectangle('Position',[-Bp/2 -Hp/2 Bp (Hp-hp)/2],'LineStyle',':');
-    rectangle('Position',[-Bp/2 hp/2 Bp (Hp-hp)/2],'LineStyle',':');
-    
-    title(['Link ',num2str(i)])
-    if i==1
-        xlabel('B [mm]')
-        ylabel('H [mm]')
-    end
-end
+% xmax = max(Truss(2).B)/2;
+% ymax = max(Truss(2).H)/2;
+% for i=2:3
+%     subplot(2,2,i-1)
+%     axis equal
+%     Bp = Truss(i).B(1);
+%     Hp = Truss(i).H(1);
+%     bp = Truss(i).b(1);
+%     hp = Truss(i).h(1);
+%     xlim([-xmax-offset xmax+offset])
+%     ylim([-ymax-offset ymax+offset])
+%     rectangle('Position',[-(Bp-bp)/2 -hp/2 Bp-bp hp]);
+%     rectangle('Position',[-Bp/2 -Hp/2 Bp (Hp-hp)/2]);
+%     rectangle('Position',[-Bp/2 hp/2 Bp (Hp-hp)/2]);
+%     
+%     Bp = Truss(i).B(end);
+%     Hp = Truss(i).H(end);
+%     bp = Truss(i).b(end);
+%     hp = Truss(i).h(end);
+%     xlim([-xmax-offset xmax+offset])
+%     ylim([-ymax-offset ymax+offset])
+%     rectangle('Position',[-(Bp-bp)/2 -hp/2 Bp-bp hp],'LineStyle',':');
+%     rectangle('Position',[-Bp/2 -Hp/2 Bp (Hp-hp)/2],'LineStyle',':');
+%     rectangle('Position',[-Bp/2 hp/2 Bp (Hp-hp)/2],'LineStyle',':');
+%     
+%     title(['Link ',num2str(i)])
+%     if i==1
+%         xlabel('B [mm]')
+%         ylabel('H [mm]')
+%     end
+% end
 
 %% Tube Profile
 
@@ -269,15 +271,16 @@ for i=2:3
     end
 end
 
-for i=2:3
+fprintf('Round for 3D printing (Extrusion Width = %.2fmm): \n',ew);
+for i=2:3    
     t = Tube(i).t(1);
-    t = ceil(t/0.48)*0.48;
-    fprintf('i = %i, \tt = %.2f -> \t %.2f\n',i,Tube(i).t(1),t);
+    t = ceil(t/ew)*ew;
+    fprintf('\ti = %i, \tt = %.2f -> \t %.2f\n',i,Tube(i).t(1),t);
 end
 
 
 %% Export
-Section.Truss = Truss;
+% Section.Truss = Truss;
 Section.Tube = Tube;
 save([path,'SectionAnalysis.mat'],'Section')
 
