@@ -41,3 +41,4 @@
 # visual studio compilation folders
 Visual Studio Code/bin/**
 Visual Studio Code/obj/**
+Visual Studio Code/.vs/**
