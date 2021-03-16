@@ -25,7 +25,7 @@ m = [0.11 0.24 0.19 0.08 0.05];	% [kg] masses of the links
 % motor.Torque = 0.4;  % [Nm] 40Ncm - Stepperonline - 17HS15-0404S
 % motor.mass = 0.29;
 
-motor.Torque = 0.6;  % 60Ncm - Stepperonline - 17HS24-0644S
+motor.Torque = 0.6;  % [Nm] 60Ncm - Stepperonline - 17HS24-0644S
 motor.mass = 0.5;
 
 %% Constants
@@ -48,7 +48,8 @@ d = [l(1);armOffsets(2);armOffsets(3);0;l(4)+l(5)];
 N = [0;0;0];	% [Nmm] external torque on end effector
 g = [0;0;-g0];
 
-mm = [0.17 0.2 0.17 0.17 0] + motor.mass;	% [kg] masses of transmissions and motors
+% mm = [0.17 0.2 0.17 0.17 0] + motor.mass;	% [kg] masses of transmissions and motors
+mm = [0.17 0.2+0.21 0.17 0.17 0] + 0.29;	% [kg] small motors except on Joint 2
 
 % Moments of Inertia from Fusion
 MoI = getMomentsOfInertia(path); % [kg m^2]
