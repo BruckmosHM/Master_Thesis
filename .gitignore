@@ -37,6 +37,7 @@
 *.mat
 *.eps
 *.gif
+*.txt
 
 # visual studio compilation folders
 Visual Studio Code/bin/**
