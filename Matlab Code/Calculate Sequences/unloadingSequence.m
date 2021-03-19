@@ -47,11 +47,11 @@ alphaMax = 180;
 alphaMin = -180;
 
 % Joint Boundaries
-UB = zeros(3,1)+deg2rad(alphaMax);
-LB = zeros(3,1)+deg2rad(alphaMin);
+% UB = zeros(3,1)+deg2rad(alphaMax);
+% LB = zeros(3,1)+deg2rad(alphaMin);
 
-% UB = deg2rad([160;45;160]);
-% LB = deg2rad([-160;-220;-135]);
+UB = deg2rad([0;0;180]);
+LB = deg2rad([-180;-180;-180]);
 
 alpha0 = zeros(3,1);
 
@@ -76,9 +76,10 @@ alpha0 = zeros(3,1);
 
 % Trajectory
 P(1,:) = [245 0 zOffset];
-P(2,:) = [200 200 100];
-P(3,:) = [-100 250 100];
-P(4,:) = [-330 -yOffset (-34+51)];
+P(2,:) = [250 200 150];
+P(3,:) = [0 250 150];
+P(4,:) = [-200 200 100];
+P(5,:) = [-330 -yOffset (-34+51)];
 
 for i=1:size(P,1)
     fun = @(x) nonlcon(x,P(i,:),l,eOffset);
@@ -86,7 +87,7 @@ for i=1:size(P,1)
     [x, ~, flag] = fmincon(@goalFun,alpha0,A,B,Aeq,Beq,LB,UB,fun,options); 
     
     if (flag < 0)
-        fprintf('No Solution found for Point %i.\n',i);
+        fprintf('Error at Point %i. Flag: %i\n\n',i,flag);
     end
     
     Abs(i,:) = x;
