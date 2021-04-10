@@ -29,11 +29,15 @@ namespace GUI_CSharp
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.disconnectBtn = new System.Windows.Forms.Button();
             this.connectBtn = new System.Windows.Forms.Button();
             this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.posAcc1 = new System.Windows.Forms.Button();
+            this.rotateBtn = new System.Windows.Forms.Button();
+            this.multiControlBtn = new System.Windows.Forms.Button();
             this.resetBtn = new System.Windows.Forms.Button();
             this.liftButton = new System.Windows.Forms.Button();
             this.stretch = new System.Windows.Forms.Button();
@@ -56,6 +60,7 @@ namespace GUI_CSharp
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.groupBox6 = new System.Windows.Forms.GroupBox();
+            this.sendDegreeBtn = new System.Windows.Forms.Button();
             this.sendMotorSteps = new System.Windows.Forms.Button();
             this.motor5Steps = new System.Windows.Forms.TextBox();
             this.motor4Steps = new System.Windows.Forms.TextBox();
@@ -63,6 +68,12 @@ namespace GUI_CSharp
             this.motor2Steps = new System.Windows.Forms.TextBox();
             this.motor1Steps = new System.Windows.Forms.TextBox();
             this.groupBox7 = new System.Windows.Forms.GroupBox();
+            this.m5degLabel = new System.Windows.Forms.Label();
+            this.m4degLabel = new System.Windows.Forms.Label();
+            this.m3degLabel = new System.Windows.Forms.Label();
+            this.m2degLabel = new System.Windows.Forms.Label();
+            this.m1degLabel = new System.Windows.Forms.Label();
+            this.label11 = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
             this.m5PosLabel = new System.Windows.Forms.Label();
             this.m4PosLabel = new System.Windows.Forms.Label();
@@ -74,13 +85,7 @@ namespace GUI_CSharp
             this.label7 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
-            this.label11 = new System.Windows.Forms.Label();
-            this.m1degLabel = new System.Windows.Forms.Label();
-            this.m2degLabel = new System.Windows.Forms.Label();
-            this.m3degLabel = new System.Windows.Forms.Label();
-            this.m4degLabel = new System.Windows.Forms.Label();
-            this.m5degLabel = new System.Windows.Forms.Label();
-            this.sendDegreeBtn = new System.Windows.Forms.Button();
+            this.ToolTip = new System.Windows.Forms.ToolTip(this.components);
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -132,6 +137,9 @@ namespace GUI_CSharp
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.posAcc1);
+            this.groupBox2.Controls.Add(this.rotateBtn);
+            this.groupBox2.Controls.Add(this.multiControlBtn);
             this.groupBox2.Controls.Add(this.resetBtn);
             this.groupBox2.Controls.Add(this.liftButton);
             this.groupBox2.Controls.Add(this.stretch);
@@ -144,6 +152,40 @@ namespace GUI_CSharp
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Motion Sequences";
             // 
+            // posAcc1
+            // 
+            this.posAcc1.Location = new System.Drawing.Point(87, 80);
+            this.posAcc1.Name = "posAcc1";
+            this.posAcc1.Size = new System.Drawing.Size(100, 23);
+            this.posAcc1.TabIndex = 7;
+            this.posAcc1.Text = "Accuracy Test";
+            this.ToolTip.SetToolTip(this.posAcc1, "Motion Sequence to test Position/Repeatability of the Arm.\r\nStart from Test Posit" +
+        "ion.\r\n");
+            this.posAcc1.UseVisualStyleBackColor = true;
+            this.posAcc1.Click += new System.EventHandler(this.posAcc1_Click);
+            // 
+            // rotateBtn
+            // 
+            this.rotateBtn.Location = new System.Drawing.Point(151, 21);
+            this.rotateBtn.Name = "rotateBtn";
+            this.rotateBtn.Size = new System.Drawing.Size(58, 23);
+            this.rotateBtn.TabIndex = 6;
+            this.rotateBtn.Text = "Rotate";
+            this.ToolTip.SetToolTip(this.rotateBtn, "Rotate the arm after \"Lift\" sequence.\r\nControls Joint 1-4.");
+            this.rotateBtn.UseVisualStyleBackColor = true;
+            this.rotateBtn.Click += new System.EventHandler(this.rotateBtn_Click);
+            // 
+            // multiControlBtn
+            // 
+            this.multiControlBtn.Location = new System.Drawing.Point(87, 51);
+            this.multiControlBtn.Name = "multiControlBtn";
+            this.multiControlBtn.Size = new System.Drawing.Size(100, 23);
+            this.multiControlBtn.TabIndex = 5;
+            this.multiControlBtn.Text = "Multi Control";
+            this.ToolTip.SetToolTip(this.multiControlBtn, "Control All Motors at Once. \r\nMove every motor a 20 degrees.\r\n");
+            this.multiControlBtn.UseVisualStyleBackColor = true;
+            this.multiControlBtn.Click += new System.EventHandler(this.multiControlBtn_Click);
+            // 
             // resetBtn
             // 
             this.resetBtn.Location = new System.Drawing.Point(6, 109);
@@ -151,6 +193,7 @@ namespace GUI_CSharp
             this.resetBtn.Size = new System.Drawing.Size(75, 23);
             this.resetBtn.TabIndex = 4;
             this.resetBtn.Text = "Reset";
+            this.ToolTip.SetToolTip(this.resetBtn, "Reset the position to 0.");
             this.resetBtn.UseVisualStyleBackColor = true;
             this.resetBtn.Click += new System.EventHandler(this.resetBtn_Click);
             // 
@@ -158,9 +201,11 @@ namespace GUI_CSharp
             // 
             this.liftButton.Location = new System.Drawing.Point(87, 22);
             this.liftButton.Name = "liftButton";
-            this.liftButton.Size = new System.Drawing.Size(75, 23);
+            this.liftButton.Size = new System.Drawing.Size(58, 23);
             this.liftButton.TabIndex = 3;
             this.liftButton.Text = "Lift";
+            this.ToolTip.SetToolTip(this.liftButton, "Motion Sequence to lift the end effector.\r\nControls Joint 2 and 3. Start from Pos" +
+        "ition 0\r\nEnd effector at lowest point.");
             this.liftButton.UseVisualStyleBackColor = true;
             this.liftButton.Click += new System.EventHandler(this.liftButton_Click);
             // 
@@ -171,6 +216,7 @@ namespace GUI_CSharp
             this.stretch.Size = new System.Drawing.Size(75, 23);
             this.stretch.TabIndex = 2;
             this.stretch.Text = "Stretch";
+            this.ToolTip.SetToolTip(this.stretch, "Release Al");
             this.stretch.UseVisualStyleBackColor = true;
             this.stretch.Click += new System.EventHandler(this.stretch_Click);
             // 
@@ -181,6 +227,7 @@ namespace GUI_CSharp
             this.releaseBtn.Size = new System.Drawing.Size(75, 23);
             this.releaseBtn.TabIndex = 1;
             this.releaseBtn.Text = "Release";
+            this.ToolTip.SetToolTip(this.releaseBtn, "Release all motors and reset the position to 0.\r\n");
             this.releaseBtn.UseVisualStyleBackColor = true;
             this.releaseBtn.Click += new System.EventHandler(this.releaseBtn_Click);
             // 
@@ -369,6 +416,16 @@ namespace GUI_CSharp
             this.groupBox6.TabStop = false;
             this.groupBox6.Text = "Manual Motor Control";
             // 
+            // sendDegreeBtn
+            // 
+            this.sendDegreeBtn.Location = new System.Drawing.Point(361, 48);
+            this.sendDegreeBtn.Name = "sendDegreeBtn";
+            this.sendDegreeBtn.Size = new System.Drawing.Size(82, 23);
+            this.sendDegreeBtn.TabIndex = 6;
+            this.sendDegreeBtn.Text = "Degree";
+            this.sendDegreeBtn.UseVisualStyleBackColor = true;
+            this.sendDegreeBtn.Click += new System.EventHandler(this.sendDegreeBtn_Click);
+            // 
             // sendMotorSteps
             // 
             this.sendMotorSteps.Location = new System.Drawing.Point(361, 19);
@@ -439,6 +496,60 @@ namespace GUI_CSharp
             this.groupBox7.TabIndex = 8;
             this.groupBox7.TabStop = false;
             this.groupBox7.Text = "Motor Positions";
+            // 
+            // m5degLabel
+            // 
+            this.m5degLabel.Location = new System.Drawing.Point(104, 89);
+            this.m5degLabel.Name = "m5degLabel";
+            this.m5degLabel.Size = new System.Drawing.Size(50, 15);
+            this.m5degLabel.TabIndex = 17;
+            this.m5degLabel.Text = "0";
+            this.m5degLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // m4degLabel
+            // 
+            this.m4degLabel.Location = new System.Drawing.Point(104, 74);
+            this.m4degLabel.Name = "m4degLabel";
+            this.m4degLabel.Size = new System.Drawing.Size(50, 15);
+            this.m4degLabel.TabIndex = 16;
+            this.m4degLabel.Text = "0";
+            this.m4degLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // m3degLabel
+            // 
+            this.m3degLabel.Location = new System.Drawing.Point(104, 59);
+            this.m3degLabel.Name = "m3degLabel";
+            this.m3degLabel.Size = new System.Drawing.Size(50, 15);
+            this.m3degLabel.TabIndex = 15;
+            this.m3degLabel.Text = "0";
+            this.m3degLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // m2degLabel
+            // 
+            this.m2degLabel.Location = new System.Drawing.Point(104, 44);
+            this.m2degLabel.Name = "m2degLabel";
+            this.m2degLabel.Size = new System.Drawing.Size(50, 15);
+            this.m2degLabel.TabIndex = 14;
+            this.m2degLabel.Text = "0";
+            this.m2degLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // m1degLabel
+            // 
+            this.m1degLabel.Location = new System.Drawing.Point(104, 29);
+            this.m1degLabel.Name = "m1degLabel";
+            this.m1degLabel.Size = new System.Drawing.Size(50, 15);
+            this.m1degLabel.TabIndex = 13;
+            this.m1degLabel.Text = "0";
+            this.m1degLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(105, 14);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(49, 15);
+            this.label11.TabIndex = 12;
+            this.label11.Text = "Degrees";
             // 
             // label10
             // 
@@ -539,71 +650,11 @@ namespace GUI_CSharp
             this.label6.TabIndex = 1;
             this.label6.Text = "Joint 1";
             // 
-            // label11
+            // ToolTip
             // 
-            this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(105, 14);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(49, 15);
-            this.label11.TabIndex = 12;
-            this.label11.Text = "Degrees";
+            this.ToolTip.Popup += new System.Windows.Forms.PopupEventHandler(this.toolTip1_Popup);
             // 
-            // m1degLabel
-            // 
-            this.m1degLabel.Location = new System.Drawing.Point(104, 29);
-            this.m1degLabel.Name = "m1degLabel";
-            this.m1degLabel.Size = new System.Drawing.Size(50, 15);
-            this.m1degLabel.TabIndex = 13;
-            this.m1degLabel.Text = "0";
-            this.m1degLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // m2degLabel
-            // 
-            this.m2degLabel.Location = new System.Drawing.Point(104, 44);
-            this.m2degLabel.Name = "m2degLabel";
-            this.m2degLabel.Size = new System.Drawing.Size(50, 15);
-            this.m2degLabel.TabIndex = 14;
-            this.m2degLabel.Text = "0";
-            this.m2degLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // m3degLabel
-            // 
-            this.m3degLabel.Location = new System.Drawing.Point(104, 59);
-            this.m3degLabel.Name = "m3degLabel";
-            this.m3degLabel.Size = new System.Drawing.Size(50, 15);
-            this.m3degLabel.TabIndex = 15;
-            this.m3degLabel.Text = "0";
-            this.m3degLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // m4degLabel
-            // 
-            this.m4degLabel.Location = new System.Drawing.Point(104, 74);
-            this.m4degLabel.Name = "m4degLabel";
-            this.m4degLabel.Size = new System.Drawing.Size(50, 15);
-            this.m4degLabel.TabIndex = 16;
-            this.m4degLabel.Text = "0";
-            this.m4degLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // m5degLabel
-            // 
-            this.m5degLabel.Location = new System.Drawing.Point(104, 89);
-            this.m5degLabel.Name = "m5degLabel";
-            this.m5degLabel.Size = new System.Drawing.Size(50, 15);
-            this.m5degLabel.TabIndex = 17;
-            this.m5degLabel.Text = "0";
-            this.m5degLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // sendDegreeBtn
-            // 
-            this.sendDegreeBtn.Location = new System.Drawing.Point(361, 48);
-            this.sendDegreeBtn.Name = "sendDegreeBtn";
-            this.sendDegreeBtn.Size = new System.Drawing.Size(82, 23);
-            this.sendDegreeBtn.TabIndex = 6;
-            this.sendDegreeBtn.Text = "Degree";
-            this.sendDegreeBtn.UseVisualStyleBackColor = true;
-            this.sendDegreeBtn.Click += new System.EventHandler(this.sendDegreeBtn_Click);
-            // 
-            // Form1
+            // Motor_Control_GUI
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -616,7 +667,7 @@ namespace GUI_CSharp
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
-            this.Name = "Form1";
+            this.Name = "Motor_Control_GUI";
             this.Text = "Form1";
             this.Load += new System.EventHandler(this.Form1_Load);
             this.groupBox1.ResumeLayout(false);
@@ -689,6 +740,10 @@ namespace GUI_CSharp
         private System.Windows.Forms.Label m2degLabel;
         private System.Windows.Forms.Label m1degLabel;
         private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.Button multiControlBtn;
+        private System.Windows.Forms.Button rotateBtn;
+        private System.Windows.Forms.Button posAcc1;
+        private System.Windows.Forms.ToolTip ToolTip;
     }
 }
 

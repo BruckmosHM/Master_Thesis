@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Windows.Forms;
 using System.IO.Ports;
+using System.Threading;
 
 namespace GUI_CSharp
 {
@@ -263,9 +264,9 @@ namespace GUI_CSharp
                 if (steptypeLabel.Text.Equals("Microstep"))
                 {
                     // Microsteps are smaller
-                    // 1672*20 = 33440
-                    // 1167*20 = 23340
-                    toArduino("M 0 -33440 -11670 0 0");
+                    // 1672*16 = 26752
+                    // 1167*16 = 18672
+                    toArduino("M 0 -26752 -18672 0 0");
                 } else
                 {
                     toArduino("M 0 -1672 -1167 0 0");
@@ -329,6 +330,89 @@ namespace GUI_CSharp
             motor3Steps.Text = "";
             motor4Steps.Text = "";
             motor5Steps.Text = "";
+        }
+
+        private void multiControlBtn_Click(object sender, EventArgs e)
+        {
+            // Control all 4 connected motors to check multiple movement
+            if (jointPos.SequenceEqual(new int[] { 0, 0, 0, 0, 0 }))
+            {
+                // Motors are in start position and movement can start
+
+                // Joint 1: 20°/1.8°*30 = 333
+                // Joint 2: 20°/1.8°*43 = 477
+                // Joint 3: 20°/1.8°*30 = 333
+                // Joint 2: 20°/1.8°*30 = 333
+                if (steptypeLabel.Text.Equals("Microstep"))
+                {
+                    // Microsteps are smaller
+                    toConsole("Error: Change to Double or Single Step!");
+                }
+                else
+                {
+                    toArduino("M 333 -477 -333 -333 0");
+                }
+
+            }
+            else
+            {
+                // Motors are in the wrong position
+                toConsole("Error: Motors are not in the right position!\n");
+            }
+
+
+        }
+
+        private void rotateBtn_Click(object sender, EventArgs e)
+        {
+            // Rotate the Arm 180° clockwise - Arm needs to be lifted at first
+            if (jointPos.SequenceEqual(new int[] { 0, -1672, -1167, 0, 0 }))
+            {
+                // Motors are in start position and movement can start
+
+                // Joint 1: 145°/1.8°*30 = 2416
+                // Joint 2: 50°/1.8°*43 = 1194
+                // Joint 3: 20°/1.8°*30 = 333
+                // Joint 4: 30°/1.8°*30 = 500
+
+                if (steptypeLabel.Text.Equals("Microstep"))
+                {
+                    // Microsteps are smaller
+                    toConsole("Error: Change to Double or Single Step!");
+                }
+                else
+                {
+                    toArduino("M 2416 -1194 -333 500 0");
+                }
+
+            }
+            else
+            {
+                // Motors are in the wrong position
+                toConsole("Error: Lift the Arm at first!\n");
+            }
+        }
+
+        private void posAcc1_Click(object sender, EventArgs e)
+        {
+            //Move arm away from Accuracy Position
+            //Joint 1/3/4: 10/1.8*30 = 166
+            //Joint 2: 10/1.8*43 = 238
+
+            toConsole("Starting Position Repeatability Test..\n");
+            for (int i = 0; i < 5; i++)
+            {
+                toArduino("M 300 -238 200 166 0");
+                Thread.Sleep(10000);
+                toArduino("M -300 238 -200 -166 0");
+                Thread.Sleep(10000);
+            }
+            toConsole("Repeatability Test done.\n");
+        }
+
+        private void toolTip1_Popup(object sender, PopupEventArgs e)
+        {
+
         }
     }
 }
