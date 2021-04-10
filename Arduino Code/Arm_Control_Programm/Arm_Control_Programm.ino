@@ -17,9 +17,9 @@ Adafruit_MotorShield bottomShield(0x61);
 
 // Connect stepper motors
 Adafruit_StepperMotor *joint1 = topShield.getStepper(200, 2);
-Adafruit_StepperMotor *joint2 = bottomShield.getStepper(200, 1);
+Adafruit_StepperMotor *joint2 = topShield.getStepper(200, 1);
 Adafruit_StepperMotor *joint3 = bottomShield.getStepper(200, 2);
-Adafruit_StepperMotor *joint4 = topShield.getStepper(200, 1);
+Adafruit_StepperMotor *joint4 = bottomShield.getStepper(200, 1);
 
 // ---------------- //
 // Stepperfunctions //
