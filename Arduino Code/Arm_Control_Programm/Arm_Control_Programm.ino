@@ -15,7 +15,7 @@ double slwFkt = 0.77;
 Adafruit_MotorShield topShield(0x60);
 Adafruit_MotorShield bottomShield(0x61);
 
-// Connect stepper motors
+// Connect stepper motors to the correct shield and motor
 Adafruit_StepperMotor *joint1 = topShield.getStepper(200, 2);
 Adafruit_StepperMotor *joint2 = topShield.getStepper(200, 1);
 Adafruit_StepperMotor *joint3 = bottomShield.getStepper(200, 2);
